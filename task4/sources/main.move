@@ -11,20 +11,33 @@ module 0x42::Task4 {
 
     // TODO
     // 1. create a deleteable object
+    struct Refs has key {
+        delete_ref: object::DeleteRef
+    }
     public fun createDeleteableObject(caller: &signer):ConstructorRef {
-        // ...
+       let Object_cref = create_object_from_account(creator: &signer)
+        let Object_signer = object::generate_signer(&Object_cref);
+        let delete_ref =  generate_delete_ref(&Object_cref);
+     move_to{
+            collection_signer,
+            Refs{delete_ref}
+            };
+    Object_cref
     }
 
     // TODO
     // 2. create a named object
     public fun createNamedObject(caller: &signer):ConstructorRef {
-        // ...
+        let obj = create_named_object(caller , NAME);
+        obj
     }
 
     // TODO
     // 3. create a sticky object
     public fun createStickyObject(caller: &signer):ConstructorRef {
-        // ...
+         let addr = signer::address_of(caller);
+         let obj = object::create_sticky_object(addr);
+    obj
     }
 
     #[test(caller = @0x88)]
